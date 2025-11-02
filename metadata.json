@@ -1,0 +1,7 @@
+{
+  "name": "Arbitra Enterprise Artifact Foundry",
+  "description": "An advanced brutalist interface for generating enterprise-grade documentation packages from a source corpus using a deterministic, stateful rendering engine simulation.",
+  "requestFramePermissions": [
+    "geolocation"
+  ]
+}
