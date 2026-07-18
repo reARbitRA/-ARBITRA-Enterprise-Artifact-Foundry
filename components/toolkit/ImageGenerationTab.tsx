@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { generateImage } from '../../services/aiToolkitService';
 import useLocalStorage from '../../hooks/useLocalStorage';
@@ -37,10 +38,12 @@ const ImageGenerationTab: React.FC = () => {
         setIsLoading(true);
         setGenerationState(prev => ({ ...prev, resultImage: null, error: null }));
         const response = await generateImage(generationState.prompt, generationState.aspectRatio, generationState.style);
+        // Ensure type narrowing for discriminated union.
         if (response.success) {
-            setGenerationState(prev => ({ ...prev, resultImage: response.image ?? null }));
+            setGenerationState(prev => ({ ...prev, resultImage: response.image }));
         } else {
-            setGenerationState(prev => ({ ...prev, error: response.error ?? 'An unknown error occurred.' }));
+            // FIX: Accessing response.error is safe here because the type has been narrowed to ErrorResponse.
+            setGenerationState(prev => ({ ...prev, error: response.error }));
         }
         setIsLoading(false);
     };

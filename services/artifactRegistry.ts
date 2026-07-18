@@ -1,8 +1,10 @@
+
 export interface Category {
   name: string;
   description: string;
   files: string[];
   useThinkingMode?: boolean;
+  useGrounding?: 'googleSearch';
 }
 
 export const dashboardCategories: Category[] = [
@@ -18,6 +20,19 @@ export const dashboardCategories: Category[] = [
       "case-study-template.md"
     ],
     useThinkingMode: true,
+    useGrounding: 'googleSearch',
+  },
+  {
+    name: "AI Asset Valuation",
+    description: "The 'Worth': Valuate prompts as Intellectual Property using the AAVM framework.",
+    files: [
+      "valuation-report.md",
+      "roi-model.xlsx",
+      "asset-manifest.json",
+      "optimization-strategy.md"
+    ],
+    useThinkingMode: true,
+    useGrounding: 'googleSearch',
   },
   {
     name: "Product & Technical Specification",
@@ -39,7 +54,8 @@ export const dashboardCategories: Category[] = [
       "demo-script.txt",
       "partner-referral-system.md",
       "multilingual-content-library/"
-    ]
+    ],
+    useGrounding: 'googleSearch',
   },
   {
     name: "Deployment & Operations",
@@ -52,39 +68,23 @@ export const dashboardCategories: Category[] = [
     ]
   },
   {
+    name: "Artifact Export & Tooling",
+    description: "The 'How to Share': Tools and scripts for exporting and managing generated artifacts.",
+    files: [
+      "export-script.sh",
+      "export-config.json",
+      "README.md"
+    ],
+    useThinkingMode: true,
+  },
+  {
     name: "Governance, Risk & Compliance",
     description: "The 'How to Trust': Prove the solution is secure, compliant, and trustworthy.",
     files: [
       "compliance-report.md",
       "legal-documents.md",
       "watermark-info.txt",
-      "audit-trail.json",
-      "translation-metadata.json",
-      "regulatory-monitoring.json"
-    ]
-  },
-  {
-    name: "AI Engine Interface",
-    description: "The 'How to Re-create': The source code for the generation process itself.",
-    files: [
-      "Prompt_Version_1_Filled_Example.md",
-      "Prompt_Version_2_Template.md"
-    ]
-  },
-  {
-    name: "User Interface Guidelines",
-    description: "The 'How it Looks': Define the visual language, component behavior, and accessibility standards.",
-    files: [
-      "style-guide.md",
-      "component-library.md",
-      "accessibility-checklist.md"
-    ]
-  },
-  {
-    name: "Custom Artifact",
-    description: "The 'Your Turn': Define and generate a unique artifact based on the corpus.",
-    files: [
-      "custom-artifact.md"
+      "audit-trail.md"
     ]
   }
 ];

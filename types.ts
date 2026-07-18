@@ -1,52 +1,56 @@
-export interface CorpusObject {
-  promptId: string;
-  content: string;
+export type JsonPrimitive = string | number | boolean | null;
+export type JsonValue = JsonPrimitive | JsonObject | JsonArray;
+export type JsonArray = JsonValue[];
+export type JsonObject = { [k: string]: JsonValue };
+
+export type ArtifactStatus = 'pending' | 'complete' | 'error';
+
+export type ISODateString = string;
+
+/**
+ * آرتیفکت با جنریک دیتا (به‌صورت پیش‌فرض JSON)
+ */
+export type Artifact<Data = JsonValue> = {
+  id: string;
+  name: string;
+  status: ArtifactStatus;
+  createdAt: ISODateString;
+  updatedAt: ISODateString;
+  data?: Data;
+};
+
+export type DashboardMetric = {
+  key: string;
+  value: number;
+  label: string;
+};
+
+export type AIToolkitConfig = {
+  model: string;
+  provider: 'openai' | 'google' | 'azure' | 'custom';
+  temperature: number;
+  maxTokens: number;
+};
+
+/**
+ * خطای استاندارد برنامه
+ */
+export interface AppError extends Error {
+  code: string;
+  status?: number;
+  cause?: unknown;
+  meta?: Record<string, unknown>;
 }
 
-export interface Artifact {
-  filename: string;
-  content: string;
-}
+/**
+ * نتیجه‌ی امن عملیات‌ها
+ */
+export type Result<T, E = AppError> =
+  | { ok: true; data: T }
+  | { ok: false; error: E };
 
-// Types for Grounding API responses
-interface GroundingChunkWeb {
-  uri: string;
-  title: string;
-}
-
-interface GroundingChunkMaps {
-    uri: string;
-    title: string;
-    placeAnswerSources?: {
-        reviewSnippets: {
-            uri: string;
-            title: string;
-            snippet: string;
-        }[];
-    }[];
-}
-
-export interface GroundingChunk {
-  web?: GroundingChunkWeb;
-  maps?: GroundingChunkMaps;
-}
-
-// FIX: Removed export from AIStudio interface to scope it to this module and prevent global type conflicts.
-interface AIStudio {
-    hasSelectedApiKey: () => Promise<boolean>;
-    openSelectKey: () => Promise<void>;
-}
-
-declare global {
-    interface Window {
-        aistudio?: AIStudio;
-    }
-}
-
-export type GeniusFocus = 'balanced' | 'frontend' | 'backend' | 'fullstack';
-
-export interface GeniusGenerationResult {
-    success: boolean;
-    allArtifacts: { [key: string]: Artifact[] };
-    errorLog: string[];
-}
+export type ErrorContextType = {
+  errors: AppError[];
+  addError: (err: AppError) => void;
+  clearErrors: () => void;
+};

@@ -17,17 +17,17 @@ const CorpusInput: React.FC<CorpusInputProps> = ({ corpus, onCorpusChange, onRes
   const hasContent = corpus.trim().length > 0;
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [saveStatus, setSaveStatus] = useState('Save Session');
+  const [isDragging, setIsDragging] = useState(false);
+
+  const charCount = corpus.length;
+  const wordCount = corpus.trim() ? corpus.trim().split(/\s+/).length : 0;
+  const tokenEstimate = Math.ceil(charCount / 4);
 
   const handleUploadClick = () => {
     fileInputRef.current?.click();
   };
 
-  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    if (!file) {
-      return;
-    }
-
+  const processFile = (file: File) => {
     const reader = new FileReader();
     reader.onload = (e) => {
       const text = e.target?.result;
@@ -35,12 +35,29 @@ const CorpusInput: React.FC<CorpusInputProps> = ({ corpus, onCorpusChange, onRes
         onCorpusChange(text);
       }
     };
-    reader.onerror = (e) => {
-        console.error("Failed to read file:", e);
-    };
     reader.readAsText(file);
+  };
 
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) processFile(file);
     event.target.value = '';
+  };
+
+  const handleDragOver = (e: React.DragEvent) => {
+    e.preventDefault();
+    setIsDragging(true);
+  };
+
+  const handleDragLeave = () => {
+    setIsDragging(false);
+  };
+
+  const handleDrop = (e: React.DragEvent) => {
+    e.preventDefault();
+    setIsDragging(false);
+    const file = e.dataTransfer.files?.[0];
+    if (file) processFile(file);
   };
 
   const handleSave = () => {
@@ -49,20 +66,42 @@ const CorpusInput: React.FC<CorpusInputProps> = ({ corpus, onCorpusChange, onRes
       setTimeout(() => setSaveStatus('Save Session'), 2000);
   }
 
-
   return (
-    <div className="textured-panel border border-border-primary rounded-lg p-4 h-full flex flex-col">
-      <h2 className="font-oswald text-xl uppercase text-text-primary mb-4 border-b border-border-primary pb-2">
-        Foundry Input
-      </h2>
-      <p className="text-xs text-text-secondary mb-2">Provide the source of truth for all artifact generation.</p>
-      <textarea
-        value={corpus}
-        onChange={(e) => onCorpusChange(e.target.value)}
-        placeholder="Enter the master prompt, project specifications, or source data here... or upload a file."
-        className="w-full flex-grow p-3 bg-background-primary text-text-primary rounded-md focus:outline-none focus:ring-2 focus:ring-accent-border resize-none border border-border-primary"
-        disabled={isGenerating}
-      />
+    <div 
+        className={`textured-panel border rounded-lg p-4 h-full flex flex-col transition-all duration-300 ${isDragging ? 'border-accent ring-2 ring-accent/20 bg-accent/5' : 'border-border-primary'}`}
+        onDragOver={handleDragOver}
+        onDragLeave={handleDragLeave}
+        onDrop={handleDrop}
+    >
+      <div className="flex justify-between items-center mb-4 border-b border-border-primary pb-2">
+        <h2 className="font-oswald text-xl uppercase text-text-primary">
+            Foundry Input
+        </h2>
+        <div className="flex gap-4">
+            <div className="text-[10px] text-text-muted flex flex-col items-end">
+                <span className="uppercase font-bold tracking-widest text-accent">Corpus Scale</span>
+                <span>{charCount.toLocaleString()} chars / {tokenEstimate.toLocaleString()} tokens</span>
+            </div>
+        </div>
+      </div>
+      
+      <p className="text-[10px] text-text-secondary mb-3 uppercase tracking-wider">Master Source of Truth (TXT, MD, JSON)</p>
+      
+      <div className="relative flex-grow group">
+          <textarea
+            value={corpus}
+            onChange={(e) => onCorpusChange(e.target.value)}
+            placeholder="Paste technical requirements, project summaries, or domain data here..."
+            className="w-full h-full p-4 bg-background-primary text-text-primary rounded-none focus:outline-none focus:ring-1 focus:ring-accent-border resize-none border border-border-primary font-mono text-xs leading-relaxed"
+            disabled={isGenerating}
+          />
+          {isDragging && (
+              <div className="absolute inset-0 bg-accent/10 backdrop-blur-sm flex items-center justify-center border-2 border-dashed border-accent">
+                  <p className="font-oswald text-2xl text-accent uppercase animate-pulse">Drop to Load Corpus</p>
+              </div>
+          )}
+      </div>
+
        <input
         type="file"
         ref={fileInputRef}
@@ -70,7 +109,8 @@ const CorpusInput: React.FC<CorpusInputProps> = ({ corpus, onCorpusChange, onRes
         className="hidden"
         accept=".txt,.md,.json,.js,.ts,.html,.css,.xml"
       />
-      <div className="mt-4 grid grid-cols-2 gap-2">
+      
+      <div className="mt-4 grid grid-cols-2 gap-3">
          <button
             onClick={handleSave}
             disabled={isGenerating || !hasContent}

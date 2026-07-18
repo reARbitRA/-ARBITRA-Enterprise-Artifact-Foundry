@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { generateCode } from '../../services/aiToolkitService';
 import useLocalStorage from '../../hooks/useLocalStorage';
@@ -38,10 +39,12 @@ const FileGenerationTab: React.FC = () => {
 Based on the following request: ${generationState.prompt}`;
 
         const response = await generateCode(fileGenPrompt, generationState.language);
+        // Ensure type narrowing for discriminated union.
         if (response.success) {
-            setGenerationState(prev => ({ ...prev, resultCode: response.code ?? null }));
+            setGenerationState(prev => ({ ...prev, resultCode: response.code }));
         } else {
-            setGenerationState(prev => ({ ...prev, error: response.error ?? 'An unknown error occurred.' }));
+            // FIX: Accessing response.error is safe here because the type has been narrowed to ErrorResponse.
+            setGenerationState(prev => ({ ...prev, error: response.error }));
         }
         setIsLoading(false);
     };

@@ -1,5 +1,5 @@
 import React from 'react';
-import type { GroundingChunk } from '../../types';
+import type { GroundingChunk } from '../../types/toolkit.types';
 
 interface SourceLinkProps {
   chunk: GroundingChunk;

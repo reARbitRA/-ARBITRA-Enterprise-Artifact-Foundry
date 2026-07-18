@@ -1,7 +1,8 @@
+
 import React, { useState } from 'react';
 import { analyzeData } from '../../services/aiToolkitService';
 import useLocalStorage from '../../hooks/useLocalStorage';
-import type { AnalysisResult, ChartData } from '../../services/aiToolkitService';
+import type { AnalysisResult, ChartData } from '../../types/toolkit.types';
 
 interface AnalysisState {
     prompt: string;
@@ -53,10 +54,12 @@ const DataAnalysisTab: React.FC = () => {
         setIsLoading(true);
         setAnalysisState(prev => ({ ...prev, result: null, error: null }));
         const response = await analyzeData(analysisState.prompt, analysisState.data);
-        if (response.success && response.result) {
+        // Ensure type narrowing for discriminated union.
+        if (response.success) {
             setAnalysisState(prev => ({ ...prev, result: response.result }));
         } else {
-            setAnalysisState(prev => ({ ...prev, error: response.error ?? 'An unknown error occurred.' }));
+            // FIX: Accessing response.error is safe here because the type has been narrowed to ErrorResponse.
+            setAnalysisState(prev => ({ ...prev, error: response.error }));
         }
         setIsLoading(false);
     };

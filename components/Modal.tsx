@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import type { Artifact } from '../types';
+import type { Artifact } from '../types/artifact.types';
 import { CopyIcon } from './icons/CopyIcon';
 import { DownloadIcon } from './icons/DownloadIcon';
 import { quickEdit } from '../services/aiToolkitService';
@@ -19,7 +19,13 @@ const Modal: React.FC<ModalProps> = ({ artifact, onClose }) => {
 
   useEffect(() => {
     setEditedContent(artifact.content);
-  }, [artifact]);
+
+    const handleEscape = (e: KeyboardEvent) => {
+        if (e.key === 'Escape') onClose();
+    };
+    window.addEventListener('keydown', handleEscape);
+    return () => window.removeEventListener('keydown', handleEscape);
+  }, [artifact, onClose]);
 
   const handleCopy = () => {
     navigator.clipboard.writeText(editedContent).then(() => {
@@ -47,9 +53,11 @@ const Modal: React.FC<ModalProps> = ({ artifact, onClose }) => {
     setIsEditing(true);
     setEditError('');
     const result = await quickEdit(editedContent, instruction);
+    // Ensure type narrowing for discriminated union.
     if (result.success) {
       setEditedContent(result.content);
     } else {
+      // FIX: Accessing result.error is safe here because the type has been narrowed to ErrorResponse.
       setEditError(result.error);
     }
     setIsEditing(false);

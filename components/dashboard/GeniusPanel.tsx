@@ -1,5 +1,5 @@
 import React from 'react';
-import type { GeniusFocus } from '../../types';
+import type { GeniusFocus } from '../../types/dashboard.types';
 import { PaletteIcon, ServerIcon, SparkleIcon } from '../icons/CategoryIcons';
 
 interface GeniusPanelProps {

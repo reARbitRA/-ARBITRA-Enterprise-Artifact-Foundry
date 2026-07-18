@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import type { Artifact } from '../types';
+import type { Artifact } from '../types/artifact.types';
 import ArtifactCard from './ArtifactCard';
 import { ChevronIcon } from './icons/ChevronIcon';
 

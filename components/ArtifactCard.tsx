@@ -1,6 +1,8 @@
 import React from 'react';
-import type { Artifact } from '../types';
+import type { Artifact } from '../types/artifact.types';
 import { ArtifactTypeIcon } from './icons/ArtifactTypeIcon';
+import { DownloadIcon } from './icons/DownloadIcon';
+import { EyeIcon } from './icons/CategoryIcons';
 
 interface ArtifactCardProps {
   artifact: Artifact;
@@ -16,6 +18,18 @@ const ArtifactCard: React.FC<ArtifactCardProps> = ({ artifact, onSelect, isSelec
       ? 'border-accent-border shadow-lg shadow-cyan-500/20'
       : 'border-border-primary hover:border-accent-border/70 hover:shadow-lg hover:shadow-cyan-500/10'
   }`;
+
+  const handleDownloadIndividual = () => {
+    const blob = new Blob([artifact.content], { type: 'text/plain;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = artifact.filename;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  };
   
   return (
     <div className={cardClasses}>
@@ -32,12 +46,24 @@ const ArtifactCard: React.FC<ArtifactCardProps> = ({ artifact, onSelect, isSelec
           <h3 className="font-bold text-text-primary truncate ml-2 text-sm">{artifact.filename}</h3>
         </div>
       </div>
-      <button
-        onClick={() => onSelect(artifact)}
-        className="w-full bg-background-tertiary text-text-primary px-3 py-1.5 rounded-md text-xs font-semibold hover:bg-accent hover:text-accent-text transition-colors duration-200 border border-border-secondary hover:border-accent"
-      >
-        View Content
-      </button>
+      <div className="flex flex-col space-y-2 mt-3">
+        <button
+          onClick={() => onSelect(artifact)}
+          className="w-full bg-background-tertiary text-text-primary px-3 py-1.5 rounded-md text-xs font-semibold hover:bg-accent hover:text-accent-text transition-colors duration-200 border border-border-secondary hover:border-accent flex items-center justify-center"
+          aria-label={`View content of artifact ${artifact.filename}`}
+        >
+          <EyeIcon className="h-4 w-4 mr-2" />
+          Preview Content
+        </button>
+        <button
+          onClick={handleDownloadIndividual}
+          className="w-full bg-background-tertiary text-text-primary px-3 py-1.5 rounded-md text-xs font-semibold hover:bg-accent hover:text-accent-text transition-colors duration-200 border border-border-secondary hover:border-accent flex items-center justify-center"
+          aria-label={`Download artifact ${artifact.filename}`}
+        >
+          <DownloadIcon className="h-4 w-4 mr-2" />
+          Download File
+        </button>
+      </div>
     </div>
   );
 };

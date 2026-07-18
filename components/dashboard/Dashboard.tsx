@@ -3,7 +3,7 @@ import { dashboardCategories } from '../../services/artifactRegistry';
 import CategoryButton from './CategoryButton';
 import GeniusPanel from './GeniusPanel';
 import { SparkleIcon } from '../icons/CategoryIcons';
-import type { GeniusFocus } from '../../types';
+import type { GeniusFocus } from '../../types/dashboard.types';
 
 
 interface DashboardProps {

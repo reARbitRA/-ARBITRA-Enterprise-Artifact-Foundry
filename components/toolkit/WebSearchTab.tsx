@@ -1,6 +1,7 @@
+
 import React, { useState } from 'react';
 import { groundedSearch } from '../../services/aiToolkitService';
-import type { GroundingChunk } from '../../types';
+import type { GroundingChunk } from '../../types/toolkit.types';
 import SourceLink from './SourceLink';
 import useLocalStorage from '../../hooks/useLocalStorage';
 import { CopyIcon } from '../icons/CopyIcon';
@@ -20,7 +21,7 @@ const initialState: SearchState = {
 const WebSearchTab: React.FC = () => {
     const [searchState, setSearchState] = useLocalStorage<SearchState>('searchTabState', initialState);
     const [isLoading, setIsLoading] = useState(false);
-    const [copyStatus, setCopyStatus] = useState('Copy Sources');
+    const [copyStatus, setCopyStatus] = useState('Copy All Sources');
 
     const handlePromptChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
         setSearchState(prev => ({...prev, prompt: e.target.value}));
@@ -34,10 +35,12 @@ const WebSearchTab: React.FC = () => {
         setIsLoading(true);
         setSearchState(prev => ({...prev, result: null, error: null}));
         const response = await groundedSearch(searchState.prompt, tool);
+        // Ensure type narrowing for discriminated union.
         if (response.success) {
-            setSearchState(prev => ({...prev, result: { text: response.text ?? '', sources: response.sources ?? [] }}));
+            setSearchState(prev => ({...prev, result: { text: response.text, sources: response.sources }}));
         } else {
-            setSearchState(prev => ({...prev, error: response.error ?? 'An unknown error occurred.'}));
+            // FIX: Accessing response.error is safe here because the type has been narrowed to ErrorResponse.
+            setSearchState(prev => ({...prev, error: response.error }));
         }
         setIsLoading(false);
     };
@@ -49,28 +52,30 @@ const WebSearchTab: React.FC = () => {
     const handleCopySources = () => {
         if (!searchState.result || searchState.result.sources.length === 0) return;
 
-        const sourcesText = searchState.result.sources.map(chunk => {
+        const allUris = searchState.result.sources.flatMap(chunk => {
+            const uris: string[] = [];
             const source = chunk.web || chunk.maps;
-            if (!source) return '';
-    
-            let text = `${source.title || 'Untitled Source'}: ${source.uri}`;
-            
+            if (source?.uri) {
+                uris.push(source.uri);
+            }
             if (chunk.maps?.placeAnswerSources) {
                 chunk.maps.placeAnswerSources.forEach(pa => {
                     pa.reviewSnippets.forEach(review => {
-                        text += `\n  - Review: "${review.snippet}" (${review.title}: ${review.uri})`;
+                        if (review.uri) uris.push(review.uri);
                     });
                 });
             }
-            return text;
-        }).filter(Boolean).join('\n\n');
+            return uris;
+        }).filter(Boolean);
+
+        const sourcesText = allUris.join('\n');
     
         navigator.clipboard.writeText(sourcesText).then(() => {
             setCopyStatus('Copied!');
-            setTimeout(() => setCopyStatus('Copy Sources'), 2000);
+            setTimeout(() => setCopyStatus('Copy All Sources'), 2000);
         }).catch(() => {
             setCopyStatus('Failed!');
-            setTimeout(() => setCopyStatus('Copy Sources'), 2000);
+            setTimeout(() => setCopyStatus('Copy All Sources'), 2000);
         });
     };
 

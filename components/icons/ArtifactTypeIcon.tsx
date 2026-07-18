@@ -54,6 +54,28 @@ const GenericFileIcon = ({ className }: { className: string }) => (
   </svg>
 );
 
+const PythonIcon = ({ className }: { className: string }) => (
+    <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M13.2 3.1a4.2 4.2 0 0 0-4.4 3.4 4.2 4.2 0 0 0 4.4 3.4h1.4a4.2 4.2 0 0 1 4.2 4.2v0a4.2 4.2 0 0 1-4.2 4.2H13" />
+        <path d="M10.8 20.9a4.2 4.2 0 0 1 4.4-3.4 4.2 4.2 0 0 1-4.4-3.4H9.4a4.2 4.2 0 0 0-4.2-4.2v0a4.2 4.2 0 0 0 4.2-4.2H11" />
+    </svg>
+);
+
+const JSIcon = ({ className }: { className: string }) => (
+    <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M9 9h2v6H9z" />
+        <path d="M13 15V9h2a2 2 0 0 1 2 2v2a2 2 0 0 1-2 2h-2z" />
+        <path d="M3 3h18v18H3z" />
+    </svg>
+);
+
+const ShellIcon = ({ className }: { className: string }) => (
+    <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <polyline points="4 17 10 11 4 5" />
+        <line x1="12" y1="19" x2="20" y2="19" />
+    </svg>
+);
+
 
 export const ArtifactTypeIcon: React.FC<ArtifactTypeIconProps> = ({ filename }) => {
   const extension = filename.split('.').pop()?.toLowerCase();
@@ -73,6 +95,15 @@ export const ArtifactTypeIcon: React.FC<ArtifactTypeIconProps> = ({ filename }) 
   }
   if (extension === 'txt') {
       return <TxtIcon className={className} />;
+  }
+  if (extension === 'py') {
+      return <PythonIcon className={className} />;
+  }
+  if (extension === 'js') {
+      return <JSIcon className={className} />;
+  }
+  if (extension === 'sh') {
+      return <ShellIcon className={className} />;
   }
 
   return <GenericFileIcon className={className} />;

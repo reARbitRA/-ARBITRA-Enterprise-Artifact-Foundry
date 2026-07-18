@@ -1,3 +1,4 @@
+
 import React, { useState, useRef } from 'react';
 import { analyzeImage } from '../../services/aiToolkitService';
 import useLocalStorage from '../../hooks/useLocalStorage';
@@ -51,10 +52,12 @@ const ImageAnalysisTab: React.FC = () => {
         setIsLoading(true);
         setAnalysisState(prev => ({ ...prev, result: null, error: null }));
         const response = await analyzeImage(analysisState.prompt, imageFile);
+        // Ensure type narrowing for discriminated union.
         if (response.success) {
-            setAnalysisState(prev => ({ ...prev, result: response.text ?? 'No text returned.' }));
+            setAnalysisState(prev => ({ ...prev, result: response.text }));
         } else {
-            setAnalysisState(prev => ({ ...prev, error: response.error ?? 'An unknown error occurred.' }));
+            // FIX: Accessing response.error is safe here because the type has been narrowed to ErrorResponse.
+            setAnalysisState(prev => ({ ...prev, error: response.error }));
         }
         setIsLoading(false);
     };

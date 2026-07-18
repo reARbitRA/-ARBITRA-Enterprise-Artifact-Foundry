@@ -1,9 +1,7 @@
+
 import React, { useState, useEffect, useRef } from 'react';
 import { generateVideo } from '../../services/aiToolkitService';
 import useLocalStorage from '../../hooks/useLocalStorage';
-
-// FIX: The AIStudio interface and global window augmentation have been moved to `types.ts`
-// to provide a single source of truth and resolve the "subsequent property declarations" error.
 
 interface GenerationState {
     prompt: string;
@@ -47,7 +45,7 @@ const VideoGenerationTab: React.FC = () => {
                 const hasKey = await window.aistudio.hasSelectedApiKey();
                 setApiKeySelected(hasKey);
             } else {
-                setApiKeySelected(false); // Fallback if aistudio object is not available
+                setApiKeySelected(true); // Fallback if aistudio object is not available, assume key exists
             }
         };
         checkApiKey();
@@ -65,7 +63,6 @@ const VideoGenerationTab: React.FC = () => {
         return () => clearInterval(interval);
     }, [isLoading]);
     
-    // Clean up object URL on unmount
     useEffect(() => {
         return () => {
             if (videoUrlRef.current) {
@@ -77,8 +74,6 @@ const VideoGenerationTab: React.FC = () => {
     const handleSelectKey = async () => {
         if (window.aistudio) {
             await window.aistudio.openSelectKey();
-            // Assume selection is successful and let the user proceed.
-            // A failed API call will provide the definitive feedback.
             setApiKeySelected(true);
         }
     };
@@ -89,7 +84,6 @@ const VideoGenerationTab: React.FC = () => {
             return;
         }
 
-        // Revoke previous video URL if it exists
         if (videoUrlRef.current) {
             URL.revokeObjectURL(videoUrlRef.current);
             videoUrlRef.current = null;
@@ -101,15 +95,16 @@ const VideoGenerationTab: React.FC = () => {
         
         const response = await generateVideo(generationState.prompt, generationState.resolution, generationState.aspectRatio);
         
-        if (response.success && response.video) {
+        // Ensure type narrowing for discriminated union.
+        if (response.success) {
             const url = URL.createObjectURL(response.video);
             videoUrlRef.current = url;
             setGenerationState(prev => ({ ...prev, resultVideoUrl: url }));
         } else {
-            let errorMessage = response.error ?? 'An unknown error occurred.';
-            // Check for specific API key error and prompt for re-selection
+            // FIX: Accessing response.error is safe here because the type has been narrowed to ErrorResponse.
+            let errorMessage = response.error;
             if (errorMessage.includes("Requested entity was not found.")) {
-                errorMessage = "API Key not found or invalid. Please re-select your API key and try again.";
+                errorMessage = "API Key not found or invalid for Veo. Please select a valid, billing-enabled API key and try again.";
                 setApiKeySelected(false);
             }
             setGenerationState(prev => ({ ...prev, error: errorMessage }));
