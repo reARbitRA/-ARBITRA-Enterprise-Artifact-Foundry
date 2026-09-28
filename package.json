@@ -6,6 +6,8 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
+    "typecheck": "tsc --noEmit",
+    "generate:readme-assets": "node scripts/generate-readme-assets.mjs",
     "preview": "vite preview"
   },
   "dependencies": {
