@@ -1,212 +1,129 @@
-<!--
-  ARBITRA — Enterprise Artifact Foundry
-  FACTORY FLOOR theme · Black #0A0908 · Red #D60019 · Ink #F4F1EB
-  Type: Archivo Black (display) · Special Elite (prose) · JetBrains Mono (machine)
-
-  A brutalist industrial presentation for an enterprise artifact generation engine.
-  Red indicates live state; black is the workbench; ink is the interface.
--->
+# ARBITRA Artifact Foundry
 
 <div align="center">
+<img src="assets/readme/hero-foundry.svg" alt="ARBITRA Artifact Foundry: corpus to validated delivery" width="1200" />
 
-<img alt="ARBITRA — Enterprise Artifact Foundry" width="1200" src="https://img.shields.io/badge/ARBITRA-Enterprise%20Artifact%20Foundry-D60019?style=for-the-badge&logo=github&logoColor=F4F1EB" />
+**A visual factory for structured, validated, exportable enterprise deliverables.**
 
-# ARBITRA
-## Enterprise Artifact Foundry
-
-<p>
-  <img alt="TypeScript" src="https://img.shields.io/badge/TypeScript-97.3%25-3178C6?logo=typescript&logoColor=white" />
-  <img alt="HTML" src="https://img.shields.io/badge/HTML-2.7%25-E34F26?logo=html5&logoColor=white" />
-  <img alt="Automation" src="https://img.shields.io/badge/Automation-Enterprise%20Ready-0A0908?logo=rocket&logoColor=D60019" />
-  <img alt="Status" src="https://img.shields.io/badge/Status-Artifact%20Factory-0A0908?logo=code&logoColor=F4F1EB" />
-</p>
-
-<sub>Industrial documentation synthesis for large-scale software organizations.</sub>
-
+[![TypeScript](https://img.shields.io/badge/TypeScript-ES2022-3178C6)](https://www.typescriptlang.org/) [![React](https://img.shields.io/badge/React-19-61DAFB)](https://react.dev/) [![Zod](https://img.shields.io/badge/Contracts-Zod-3E67B1)](https://zod.dev/)
 </div>
 
-<img src="https://raw.githubusercontent.com/reARbitRA/reARbitRA/main/assets/divider.svg" alt="" width="100%">
+> **KONKRED 60/25/15** — 60% factory system, 25% technical product narrative, 15% installation and verification.
 
-## The factory
+## The product
 
-ARBITRA is a high-end enterprise artifact generation system designed to solve one of the hardest problems in large projects: producing, in a self-driven and synchronized manner, the complete set of documents, configs, specs, and project files required by a modern software organization.
+ARBITRA turns a project corpus into an organized artifact suite. The working surface is a factory floor: ingest the source context, classify the intended output, select an artifact contract, generate with AI, validate the result, review the build log, and package the delivery.
 
-This is not a simple template generator. It is a structured production line for operational artifacts:
+It addresses a practical documentation problem: project knowledge arrives as mixed requirements, notes, files, and decisions, while delivery teams need coherent documents, code, data views, and handoff packages. The foundry keeps the output grouped, inspectable, and connected to the source material that produced it.
 
-- product documentation
-- technical architecture specs
-- API references
-- deployment manifests
-- security/compliance artifacts
-- handoff packages for teams and stakeholders
-- repository-ready deliverables for fast execution
+<div align="center"><img src="assets/readme/artifact-assembly-line.svg" alt="Assembly line with seven controlled stations" width="1200" /></div>
 
-The goal is simple: reduce friction, remove drift, and generate a coherent artifact ecosystem from a single source of truth.
+## Factory system
 
-<img src="https://raw.githubusercontent.com/reARbitRA/reARbitRA/main/assets/divider.svg" alt="" width="100%">
+### Project corpus → classify → select contract → generate → validate → review → package
 
-## What it does
+| Station | What happens | Evidence produced |
+|---|---|---|
+| **Corpus intake** | A project source of truth is entered into `CorpusInput`. | Input context for the run |
+| **Classification** | The dashboard and artifact registry organize work into categories. | Category, file manifest, generation flags |
+| **Contract selection** | Each output is driven by a named artifact type and prompt policy. | Filename, content, metadata shape |
+| **Generation** | `foundryService` selects Gemini Pro or Flash, adds thinking or grounding where configured, and retries transient calls. | Generated artifact content |
+| **Validation gate** | Zod schemas parse artifact data and structured toolkit responses. | Pass/fail result and typed data |
+| **Review** | Artifact cards, category groups, source links, and build logs expose the run. | Human-reviewable output and trace |
+| **Packaging bay** | Selected or complete output is exported to PDF or ZIP; generated code remains source-ready. | `Arbitra_*.pdf`, `Arbitra_*.zip` |
 
-```text
-INCOMING PROJECT SIGNAL
-        ↓
-[Requirements + context + structure + intent]
-        ↓
-[ARBITRA Foundry Engine]
-        ↓
-[Artifact synthesis pipeline]
-        ↓
-[Documentation / Specs / Config / Deliverables]
-        ↓
-[Validated enterprise output]
-```
+<div align="center"><img src="assets/readme/input-corpus.svg" alt="Project corpus entering the foundry" width="1200" /></div>
 
-ARBITRA turns project context into ready-to-use operational artifacts with speed, consistency, and engineering discipline.
+## Artifact contracts
 
-### Core capabilities
+Contracts are the control surface between AI output and application state. Artifact schemas define required file identity and content; toolkit schemas cover analysis, grounding, and demo responses; `validateData` converts parse failures into a structured result rather than letting malformed data cross the boundary.
 
-- Automated generation of project documents and technical artifacts
-- Consistent output for multiple layers: business, engineering, ops, compliance
-- Structured workflows for large-scale software initiatives
-- Repository-ready result generation
-- Fast artifact creation without losing clarity or traceability
-- Built to support enterprise complexity rather than personal toy projects
+<div align="center"><img src="assets/readme/schema-mould.svg" alt="Artifact contract mould" width="1200" /></div>
 
-<img src="https://raw.githubusercontent.com/reARbitRA/reARbitRA/main/assets/divider.svg" alt="" width="100%">
+The registry currently organizes outputs across business and strategy, product and design, technical architecture, deployment and operations, governance and compliance, blog/content, and custom artifacts. Examples include technical specifications, OpenAPI JSON, implementation guides, compliance reports, scripts, Python, JavaScript, and onboarding material.
 
-## The machine
+## Corpus ingestion and source linkage
 
-<table>
-<tr>
-<td width="33%" valign="top">
+The corpus is the single working context supplied to generation. Category prompts combine that corpus with a base instruction and file-specific requirements. Grounded calls collect validated grounding chunks; Markdown artifacts can carry source links into the generated record. This makes a generated document inspectable without claiming that AI output is authoritative by itself.
 
-<strong>Signal Capture</strong>
+## Validation gate and build log
 
-Defines the project context, domain, constraints, and expected output. The machine starts from intent, not from random templates.
+<div align="center"><img src="assets/readme/validation-gate.svg" alt="Validation gate" width="1200" /></div>
 
-</td>
-<td width="33%" valign="top">
+Generation is orchestrated one file at a time. Failures are recorded in an error log, retries are bounded, and successful artifacts are placed back into category state. The build log surfaces progress, completed categories, and generated counts in the dashboard. Schema tests cover artifact, toolkit, and dashboard validation paths.
 
-<strong>Structured Synthesis</strong>
+<div align="center"><img src="assets/readme/build-log.svg" alt="Build log" width="1200" /></div>
 
-Creates artifacts that match the system's real structure: documentation, architecture, deployment, process, and governance layers.
+## AI Toolkit
 
-</td>
-<td width="33%" valign="top">
+The toolkit is a parallel workbench for focused operations: grounded Google Search or Maps, image analysis and generation, image editing, video generation, transcription, text-to-speech, demo synthesis, file generation, code generation, and data analysis. State is held in React hooks and local storage where appropriate; service boundaries return explicit success/error unions.
 
-<strong>Enterprise Output</strong>
+<div align="center"><img src="assets/readme/ai-toolkit.svg" alt="AI Toolkit capabilities" width="1200" /></div>
 
-Delivers usable files and documentation that are coherent, synchronized, and ready for execution by real teams.
+### Data analysis
 
-</td>
-</tr>
-</table>
+Data analysis requests a JSON response with a summary and chart data, then validates it with `AnalysisResultSchema` before the UI renders the result.
 
-<img src="https://raw.githubusercontent.com/reARbitRA/reARbitRA/main/assets/divider.svg" alt="" width="100%">
+<div align="center"><img src="assets/readme/data-analysis.svg" alt="Data analysis chart" width="1200" /></div>
 
-## Example pipeline
+### Code generation
 
-```typescript
-import { Foundry } from './src/foundry';
+`generateCode(prompt, language)` requests raw source, strips accidental fences, and returns code or a typed error. The file generation tab uses the same boundary for complete named files.
 
-const project = {
-  name: 'ARBITRA Enterprise Platform',
-  domain: 'software systems',
-  artifacts: [
-    'architecture',
-    'api-spec',
-    'deployment',
-    'security-readiness',
-    'handoff-docs'
-  ]
-};
+<div align="center"><img src="assets/readme/code-generation.svg" alt="Code generation station" width="1200" /></div>
 
-const output = await Foundry.build(project);
-console.log(output.generatedFiles);
-```
+## Delivery formats
 
-This is the operating model behind the project: define the project signal, synthesize a full artifact suite, validate coherence, and generate production-ready documentation.
+<div align="center"><img src="assets/readme/packaging-bay.svg" alt="PDF ZIP and code packaging bay" width="1200" /></div>
 
-<img src="https://raw.githubusercontent.com/reARbitRA/reARbitRA/main/assets/divider.svg" alt="" width="100%">
+`ArtifactDisplay` can export all or selected artifacts to a consolidated PDF using jsPDF, or create a categorized ZIP using JSZip with progress reporting. Generated source files, Markdown, JSON, scripts, and metadata remain available for repository handoff.
 
-## Why this matters
+## Architecture
 
-In large organizations, the real bottleneck is not coding alone — it is synchronization.
-
-Without a structured artifact engine:
-
-- requirements drift over time
-- engineering docs become stale
-- deployment packages lose alignment
-- handoff quality degrades
-- decision-making slows down under ambiguity
-
-ARBITRA attacks that exact problem with scale and precision.
-
-<img src="https://raw.githubusercontent.com/reARbitRA/reARbitRA/main/assets/divider.svg" alt="" width="100%">
-
-## Project shape
+<div align="center"><img src="assets/readme/architecture.svg" alt="React services Zod and export architecture" width="1200" /></div>
 
 ```text
--ARBITRA-Enterprise-Artifact-Foundry/
-├── src/
-│   ├── core/
-│   ├── generators/
-│   ├── templates/
-│   ├── validators/
-│   └── pipeline/
-├── docs/
-│   ├── dashboard/
-│   ├── architecture/
-│   └── generated/
-├── examples/
-├── scripts/
-├── public/
-├── package.json
-├── tsconfig.json
-├── README.md
-└── LICENSE
+React UI (App, Dashboard, CorpusInput, ArtifactDisplay, Toolkit)
+  ├─ contexts + hooks (state, local storage, metrics, generation history)
+  ├─ services (foundryService, aiToolkitService, chatService)
+  ├─ middleware + schemas (Zod validation and typed boundaries)
+  ├─ registry/config (categories, contracts, models, limits)
+  └─ delivery (jsPDF PDF export, JSZip package export)
 ```
 
-The repository is organized around the idea of a production pipeline: inputs, transformation, validation, and generated enterprise artifacts.
+The browser application is built with Vite, React 19, TypeScript, Zod, jsPDF, JSZip, and the Google GenAI SDK. API credentials are read from `GEMINI_API_KEY` by Vite configuration; live AI operations require that key, while schema and utility verification does not.
 
-<img src="https://raw.githubusercontent.com/reARbitRA/reARbitRA/main/assets/divider.svg" alt="" width="100%">
+## Verification console
 
-## Quick start
+<div align="center"><img src="assets/readme/verification-console.svg" alt="Verification console" width="1200" /></div>
 
 ```bash
-# install dependencies
 npm install
-
-# start the development environment
-npm run dev
-
-# generate artifacts
 npm run build
+npm run typecheck
+npm test -- --runInBand
 ```
 
-If the project includes a local generator or dashboard, use the configured task runner to inspect the generated artifact suite and validate outputs.
+The repository includes Jest-style test files for artifact and toolkit schemas, dashboard middleware, artifact/toolkit/dashboard utilities, and artifact/dashboard hooks. The current dependency set contains test definitions and Testing Library DOM matchers but no executable Jest runner or TypeScript Jest transformer; therefore this dossier does not add a test script that would falsely imply runnable tests. Build and TypeScript checks remain the executable baseline until a runner is intentionally introduced.
 
-<img src="https://raw.githubusercontent.com/reARbitRA/reARbitRA/main/assets/divider.svg" alt="" width="100%">
+For a local UI session:
 
-## Operating principle
+```bash
+npm run dev
+# open the Vite URL shown in the terminal
+```
 
-> Build the artifact machine once.
-> Then feed it the organization's reality.
-> The output should be structure, clarity, and execution-grade documentation.
+Use a corpus, generate one category, inspect the build log, open an artifact, and exercise PDF/ZIP export. Never put a live key in source control.
 
-This is the philosophy behind ARBITRA: not merely automation, but disciplined industrial generation for complex systems.
+## Operations
 
-<img src="https://raw.githubusercontent.com/reARbitRA/reARbitRA/main/assets/divider.svg" alt="" width="100%">
+- Keep artifact contracts and registry entries synchronized.
+- Review generated content before external delivery.
+- Preserve build logs and source links with exported packages.
+- Treat grounding links as provenance, not as an automatic approval signal.
+- Run `npm run build` and `npm run typecheck` for every change.
+- Keep AI credentials in local environment configuration.
 
-<div align="center">
+<div align="center"><img src="assets/readme/footer-foundry.svg" alt="Traceable validated exportable" width="1200" /></div>
 
-<strong>PRECISION TOOLS FOR COMPLEX SYSTEMS</strong>
-
-[📘 Documentation](https://github.com/reARbitRA/-ARBITRA-Enterprise-Artifact-Foundry) · [🧭 Project Overview](https://github.com/reARbitRA/-ARBITRA-Enterprise-Artifact-Foundry) · [⚙️ Foundry Engine](https://github.com/reARbitRA/-ARBITRA-Enterprise-Artifact-Foundry)
-
-<sub>ARBITRA — Enterprise Artifact Foundry</sub>
-
-<sub>Factory Floor · Black #0A0908 · Red #D60019 · Ink #F4F1EB</sub>
-
-</div>
+**ARBITRA Artifact Foundry** · structured input · contract-led generation · validated delivery
